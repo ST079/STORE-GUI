@@ -7,7 +7,7 @@ public class Retailer extends Store {
     // Adding Constructors
     public Retailer(int storeID, String storeName, String storeLocation, String openingHour, double totalSales,
             double totalDiscount, double vatInclusivePrice, boolean isPaymentOnline, String purchasedYear) {
-        super(storeID, storeName, storeLocation, openingHour);
+        super(storeID, storeName, storeLocation, openingHour, totalSales, totalDiscount);
         super.setTotalSales(totalSales);
         super.setTotalDiscount(totalDiscount);
         this.vatInclusivePrice = vatInclusivePrice;
@@ -17,20 +17,16 @@ public class Retailer extends Store {
     }
 
     // Creating Accessor Methods
-    public double getVATInclusivePrice(double vatInclusivePrice) {
-        return this.vatInclusivePrice = vatInclusivePrice;
+    public double getVatInclusivePrice() {
+        return this.vatInclusivePrice;
     }
 
-    // public double getLoyaltyPoint() {
-    // return this.LoyaltyPoint;
-    // }
-
-    public boolean isPaymentOnline(boolean isPaymentOnline) {
-        return this.isPaymentOnline = isPaymentOnline;
+    public boolean isPaymentOnline() {
+        return this.isPaymentOnline;
     }
 
-    public String getPurchasedYear(String purchasedYear) {
-        return this.purchasedYear = purchasedYear;
+    public String getPurchasedYear() {
+        return this.purchasedYear;
     }
 
     // Creating the Mutator Methods
@@ -41,11 +37,8 @@ public class Retailer extends Store {
     // Creating a method to set Loyalty Point from VAT Inclusive Price
     public void setLoyaltyPoint(double vatInclusivePrice, boolean isPaymentOnline) {
         if (isPaymentOnline) {
-            // double loyalty = (int) (vatInclusivePrice * 0.01);
-            // StoreGUI setLoyalty = new StoreGUI();
-            // setLoyalty.loyaltyPointTextField.setText("55");
             this.LoyaltyPoint = (int) (vatInclusivePrice * 0.01);
-            ;
+
         }
     }
 
@@ -66,13 +59,14 @@ public class Retailer extends Store {
 
     // Display Method
     public void display() {
-        if (LoyaltyPoint != 0
-                && !(purchasedYear.equals("2020") || purchasedYear.equals("2021") || purchasedYear.equals("2022"))) {
+        if (LoyaltyPoint != 0 && (purchasedYear.equals("2020") || purchasedYear.equals("2021") ||
+                purchasedYear.equals("2022"))) {
             super.display();
             System.out.println("VAT Inclusive Price is: " + LoyaltyPoint + "rs");
             System.out.println("Purchased year is: " + purchasedYear);
-        } else
-            super.display();
-        System.out.println("Product details is not available");
+        } else {
+            // super.display();
+            System.out.println("Product details is not available");
+        }
     }
 }

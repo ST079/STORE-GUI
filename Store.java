@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class Store {
     // Declaring the variables
@@ -6,35 +7,54 @@ public class Store {
     private String storeLocation;
     private String openingHour;
     private double TotalSales;
-    private double TotalDiscount;
+    public double TotalDiscount;
+    private ArrayList<Department> departments = new ArrayList<>();
+    private ArrayList<Retailer> retailers = new ArrayList<>();
 
     // Declaring the constructors
-    public Store(int storeId, String storeName, String storeLocation, String openingHour) {
-        this.TotalSales = 0.0;
-        this.TotalDiscount = 0.0;
+    public Store(int storeId, String storeName, String storeLocation, String openingHour, double totalSales,
+            double totalDiscount) {
+        this.TotalSales = totalSales;
+        this.TotalDiscount = totalDiscount;
         this.storeId = storeId;
         this.storeName = storeName;
         this.storeLocation = storeLocation;
         this.openingHour = openingHour;
+        this.departments = new ArrayList<>();
+        this.retailers = new ArrayList<>();
     }
 
     // Creating all accessor methods
-    public int getStoreId(int storeId) {
-
-        return this.storeId = storeId;
-
+    public void setStoreId(int storeId) {
+        this.storeId = storeId;
     }
 
-    public String getStoreName(String storeName) {
-        return this.storeName = storeName;
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 
-    public String getStoreLocation(String storeLocation) {
-        return this.storeLocation = storeLocation;
+    public void setStoreLocation(String storeLocation) {
+        this.storeLocation = storeLocation;
     }
 
-    public String getOpeningHour(String openingHour) {
-        return this.openingHour = openingHour;
+    public void setOpeningHour(String openingHour) {
+        this.openingHour = openingHour;
+    }
+
+    public int getStoreId() {
+        return this.storeId;
+    }
+
+    public String getStoreName() {
+        return this.storeName;
+    }
+
+    public String getStoreLocation() {
+        return this.storeLocation;
+    }
+
+    public String getOpeningHour() {
+        return this.openingHour;
     }
 
     // Creating Mutator methods
@@ -44,6 +64,14 @@ public class Store {
 
     public void setTotalDiscount(double totalDiscount) {
         this.TotalDiscount = totalDiscount;
+    }
+
+    public double getTotalSales() {
+        return this.TotalSales;
+    }
+
+    public double getTotalDiscount() {
+        return this.TotalDiscount;
     }
 
     public void display() {
@@ -59,9 +87,19 @@ public class Store {
         }
     }
 
-    public void Store_collection() {
-        Store[] stores = new Store[20];
-
+    public void addDepartment(Department department) {
+        this.departments.add(department);
     }
 
+    public void addRetailer(Retailer retailer) {
+        this.retailers.add(retailer);
+    }
+
+    public ArrayList<Department> getDepartments() {
+        return this.departments;
+    }
+
+    public ArrayList<Retailer> getRetailers() {
+        return this.retailers;
+    }
 }

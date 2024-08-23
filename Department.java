@@ -7,9 +7,8 @@ public class Department extends Store {
     // Adding all constructors
     public Department(int storeId, String storeName, String storeLocation, String openingHour, double totalSales,
             double totalDiscount, String productName, double markedPrice, double sellingPrice) {
-        super(storeId, storeName, storeLocation, openingHour);
+        super(storeId, storeName, storeLocation, openingHour, totalSales, totalDiscount);
         super.setTotalSales(totalSales);
-        super.setTotalDiscount(totalDiscount);
         this.productName = productName;
         this.markedPrice = markedPrice;
         this.sellingPrice = 0.0;
@@ -17,35 +16,53 @@ public class Department extends Store {
     }
 
     // Accessor Method
-    public String getProductName(String productName) {
-        return this.productName = productName;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
-    public double getMarkedPrice(double markedPrice) {
-        return this.markedPrice = markedPrice;
+    public String getProductName() {
+        return this.productName;
     }
 
-    public double getSellingPrice(double sellingPrice) {
-        return this.sellingPrice = sellingPrice;
+    public void setMarkedPrice(double markedPrice) {
+        this.markedPrice = markedPrice;
     }
 
-    // Using the Setter Method to get MarkedPrice
-    // public void setMarkedPrice(double markedPrice) {
-    // this.markedPrice = markedPrice;
-    // }
+    public double getMarkedPrice() {
+        return this.markedPrice;
+    }
+
+    public void setSellingPrice(double sellingPrice) {
+        this.sellingPrice = sellingPrice;
+    }
+
+    public double getSellingPrice() {
+        return this.sellingPrice;
+    }
+
+    public void setTotalDiscount(double totalDiscount) {
+        this.TotalDiscount = totalDiscount;
+    }
+
+    public double getTotalDiscount() {
+        return this.TotalDiscount;
+    }
 
     // Method for calculating Discount Price
-    public void calculatedDiscountPrice(boolean isInsale, double MarkedPrice) {
-        double discount = 0.0;
-        if (MarkedPrice >= 5000) {
-            discount = 0.2;
-        } else if (MarkedPrice >= 3000 && MarkedPrice < 5000) {
-            discount = 0.05;
+    public void calculatedDiscountPrice(double markedPrice, double totalDiscount) {
+        double discount = 0;
+        if (markedPrice >= 5000) {
+            discount = 20;
+        } else if (markedPrice >= 3000 && markedPrice < 5000) {
+            discount = 5;
         }
-        sellingPrice = MarkedPrice - (MarkedPrice * discount);
-        setTotalSales(sellingPrice);
-        this.isInSales = false;
-        this.markedPrice = MarkedPrice;
+
+        totalDiscount = (discount / 100) * markedPrice;
+        System.out.println(totalDiscount);
+        double sellingPrice = markedPrice - totalDiscount;
+        setSellingPrice(sellingPrice);
+   
+        setTotalDiscount(totalDiscount);
     }
 
     public void display() {

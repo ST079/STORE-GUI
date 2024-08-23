@@ -97,7 +97,7 @@ public class StoreGUI {
         jFrame.add(openingHourLabel);
 
         // label for purchased Year,
-        String years[] = { "2001", "2002", "2003", "2004", "2005", "2006", "2007" };
+        String years[] = { "2020", "2021", "2022", "2023", "2024", "2025", "2007" };
         purchasedYearLabel = new JLabel("Purchased Year ");
         purchasedYearLabel.setBounds(100, 350, 100, 30);
         purchasedYearComboBox = new JComboBox<>(years);
@@ -151,11 +151,11 @@ public class StoreGUI {
         jFrame.add(totalSalesLabel);
 
         // label for Discount,
-        totalDiscountLabel = new JLabel("Discount ");
+        totalDiscountLabel = new JLabel("Total Discount ");
         totalDiscountLabel.setBounds(450, 300, 100, 30);
         totalDiscountTextField = new JTextField();
         totalDiscountTextField.setBounds(550, 300, 150, 30);
-        // totalDiscountTextField.setEditable(false);
+        totalDiscountTextField.setEditable(false);
         jFrame.add(totalDiscountTextField);
         jFrame.add(totalDiscountLabel);
 
@@ -164,6 +164,7 @@ public class StoreGUI {
         sellingPriceLabel.setBounds(450, 400, 100, 30);
         sellingPriceTextField = new JTextField();
         sellingPriceTextField.setBounds(550, 400, 150, 30);
+        sellingPriceTextField.setEditable(false);
         jFrame.add(sellingPriceTextField);
         jFrame.add(sellingPriceLabel);
 
@@ -183,6 +184,13 @@ public class StoreGUI {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                double markedPrice = Double.parseDouble(markedPriceTextField.getText());
+                double totalDiscount = 0;
+                Department department = new Department(0, null, null, null, 0, totalDiscount,
+                        null, markedPrice, 0);
+                department.calculatedDiscountPrice(markedPrice, totalDiscount);
+                sellingPriceTextField.setText(Double.toString(department.getSellingPrice()));
+                totalDiscountTextField.setText(Double.toString(department.getTotalDiscount()));
 
             }
 
@@ -197,8 +205,8 @@ public class StoreGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 boolean isPaymentOnline = online.isSelected();
-
                 double vatInclusivePrice = Double.parseDouble(vatTextField.getText());
+
                 Retailer r = new Retailer(0, null, null, null, 0.0, 0.0,
                         vatInclusivePrice, isPaymentOnline, null);
 
@@ -229,12 +237,13 @@ public class StoreGUI {
                 double sellingPrice = Double.parseDouble(sellingPriceTextField.getText());
                 Department d = new Department(storeId, storeName, storeLocation, openingHour, totalSales, totalDiscount,
                         productName, markedPrice, sellingPrice);
-                d.getProductName(productName);
-                d.getSellingPrice(sellingPrice);
-                d.getMarkedPrice(markedPrice);
+                d.setProductName(productName);
+                d.setSellingPrice(sellingPrice);
+                d.setMarkedPrice(markedPrice);
 
-                Store s = new Store(storeId, storeName, storeLocation, openingHour);
-                s.Store_collection();
+                Store s = new Store(storeId, storeName, storeLocation, openingHour, totalSales, totalDiscount);
+                s.addDepartment(d);
+                JOptionPane.showMessageDialog(jFrame, "Department added successfully!");
                 d.display();
 
             }
@@ -259,10 +268,13 @@ public class StoreGUI {
                 double totalSales = Double.parseDouble(totalSalesTextField.getText());
                 double totalDiscount = Double.parseDouble(totalDiscountTextField.getText());
                 double vatInclusivePrice = Double.parseDouble(vatTextField.getText());
-                Retailer r = new Retailer(storeId, storeName, storeLocation, openingHour, totalSales, totalDiscount,
+                Retailer retailer = new Retailer(storeId, storeName, storeLocation, openingHour, totalSales,
+                        totalDiscount,
                         vatInclusivePrice, isPaymentOnline, purchasedYear);
-
-                r.display();
+                Store store = new Store(storeId, storeName, storeLocation, openingHour, totalSales, totalDiscount);
+                store.addRetailer(retailer);
+                JOptionPane.showMessageDialog(jFrame, "Retailer added successfully!");
+                retailer.display();
             }
 
         });
@@ -275,6 +287,11 @@ public class StoreGUI {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                String purchasedYear = (String) purchasedYearComboBox
+                .getItemAt(purchasedYearComboBox.getSelectedIndex());
+                Retailer r = new Retailer(0, null, null, null, 0, 0, 0, false, purchasedYear);
+                r.removeProduct();
+                JOptionPane.showMessageDialog(jFrame, "Product removed successfully!");
 
             }
 
@@ -288,7 +305,58 @@ public class StoreGUI {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                int storeId = Integer.parseInt(storeIdTextField.getText());
+                String storeName = storeNameTextField.getText();
+                String storeLocation = locationTextField.getText();
+                String openingHour = openingHourTextField.getText();
+                double totalSales = Double.parseDouble(totalSalesTextField.getText());
+                double totalDiscount = Double.parseDouble(totalDiscountTextField.getText());
+                String purchasedYear = (String) purchasedYearComboBox
+                        .getItemAt(purchasedYearComboBox.getSelectedIndex());
+                boolean isPaymentOnline = online.isSelected();
+                double vatInclusivePrice = Double.parseDouble(vatTextField.getText());
+                String productName = productNameTextField.getText();
+                double markedPrice = Double.parseDouble(markedPriceTextField.getText());
+                double sellingPrice = Double.parseDouble(sellingPriceTextField.getText());
 
+                StringBuilder displayText = new StringBuilder();
+                Store store = new Store(storeId, storeName, storeLocation, openingHour, totalSales, totalDiscount);
+
+                displayText.append("Store ID: ").append(store.getStoreId()).append("\n")
+                        .append("Store Name: ").append(store.getStoreName()).append("\n")
+                        .append("Location: ").append(store.getStoreLocation()).append("\n")
+                        .append("Opening Hour: ").append(store.getOpeningHour()).append("\n")
+                        .append("Total Sales: ").append(store.getTotalSales()).append("\n")
+                        .append("Total Discount: ").append(store.getTotalDiscount()).append("\n");
+
+                // Display departments
+                displayText.append("Departments:\n");
+                Department department = new Department(storeId, storeName, storeLocation, openingHour, totalSales,
+                        totalDiscount,
+                        productName, markedPrice, sellingPrice);
+
+                displayText.append("  Product Name: ").append(department.getProductName()).append("\n");
+
+                // Display retailers
+                displayText.append("Retailers:\n");
+                Retailer retailer = new Retailer(storeId, storeName, storeLocation, openingHour, totalSales,
+                        totalDiscount,
+                        vatInclusivePrice, isPaymentOnline, purchasedYear);
+                displayText.append("  VAT Inclusive Price: ").append(retailer.getVatInclusivePrice())
+                        .append("\n")
+                        .append("  Payment Online: ").append(retailer.isPaymentOnline()).append("\n")
+                        .append("  Purchased Year: ").append(retailer.getPurchasedYear()).append("\n");
+
+                displayText.append("\n");
+
+                // Display all the information in a message dialog
+                JTextArea textArea = new JTextArea(displayText.toString());
+                JScrollPane scrollPane = new JScrollPane(textArea);
+                textArea.setLineWrap(true);
+                textArea.setWrapStyleWord(true);
+                scrollPane.setPreferredSize(new java.awt.Dimension(400, 400));
+
+                JOptionPane.showMessageDialog(jFrame, scrollPane, "Store Information", JOptionPane.INFORMATION_MESSAGE);
             }
 
         });
